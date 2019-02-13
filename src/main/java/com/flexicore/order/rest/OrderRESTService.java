@@ -14,6 +14,7 @@ import com.flexicore.order.request.UpdateOrder;
 import com.flexicore.order.service.OrderService;
 import com.flexicore.security.SecurityContext;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -26,6 +27,11 @@ import javax.ws.rs.core.Context;
 @OperationsInside
 @Interceptors({SecurityImposer.class, DynamicResourceInjector.class})
 @Path("plugins/Order")
+@OpenAPIDefinition(tags = {
+		@Tag(name = "Order",description = "Order Api"),
+		@Tag(name = "OrderItem",description = "OrderItem Api")
+
+})
 @Tag(name="Order")
 public class OrderRESTService implements RestServicePlugin {
 
