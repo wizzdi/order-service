@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flexicore.organization.model.Organization;
 import com.flexicore.organization.model.Supplier;
 
+import java.time.LocalDateTime;
+
 public class CreateOrder {
     private String name;
     private String description;
@@ -14,6 +16,7 @@ public class CreateOrder {
     private String supplierId;
     @JsonIgnore
     private Supplier supplier;
+    private LocalDateTime orderDate;
 
 
     public String getName() {
@@ -78,6 +81,15 @@ public class CreateOrder {
 
     public <T extends CreateOrder> T setSupplier(Supplier supplier) {
         this.supplier = supplier;
+        return (T) this;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public <T extends CreateOrder> T setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
         return (T) this;
     }
 }
