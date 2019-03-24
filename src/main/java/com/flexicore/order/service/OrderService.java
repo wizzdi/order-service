@@ -126,6 +126,11 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
             order.setOrderDate(createOrder.getOrderDate());
             update=true;
         }
+
+        if(createOrder.getOrderSentDate()!=null && (order.getOrderSentDate()==null||!createOrder.getOrderSentDate().equals(order.getOrderSentDate()))){
+            order.setOrderSentDate(createOrder.getOrderSentDate());
+            update=true;
+        }
         return update;
     }
 

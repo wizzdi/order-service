@@ -17,6 +17,7 @@ public class CreateOrder {
     @JsonIgnore
     private Supplier supplier;
     private LocalDateTime orderDate;
+    private LocalDateTime orderSentDate;
 
 
     public String getName() {
@@ -90,6 +91,15 @@ public class CreateOrder {
 
     public <T extends CreateOrder> T setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
+        return (T) this;
+    }
+
+    public LocalDateTime getOrderSentDate() {
+        return orderSentDate;
+    }
+
+    public <T extends CreateOrder> T setOrderSentDate(LocalDateTime orderSentDate) {
+        this.orderSentDate = orderSentDate;
         return (T) this;
     }
 }
