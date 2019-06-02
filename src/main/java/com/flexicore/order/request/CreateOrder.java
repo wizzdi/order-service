@@ -18,6 +18,7 @@ public class CreateOrder {
     private Supplier supplier;
     private LocalDateTime orderDate;
     private LocalDateTime orderSentDate;
+    private Integer ordinal;
 
 
     public String getName() {
@@ -100,6 +101,15 @@ public class CreateOrder {
 
     public <T extends CreateOrder> T setOrderSentDate(LocalDateTime orderSentDate) {
         this.orderSentDate = orderSentDate;
+        return (T) this;
+    }
+
+    public Integer getOrdinal() {
+        return ordinal;
+    }
+
+    public <T extends CreateOrder> T setOrdinal(Integer ordinal) {
+        this.ordinal = ordinal;
         return (T) this;
     }
 }

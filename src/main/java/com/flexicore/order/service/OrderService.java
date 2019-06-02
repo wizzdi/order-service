@@ -10,7 +10,6 @@ import com.flexicore.order.request.OrderFiltering;
 import com.flexicore.order.request.UpdateOrder;
 import com.flexicore.organization.model.Organization;
 import com.flexicore.organization.model.Supplier;
-import com.flexicore.product.model.Product;
 import com.flexicore.security.SecurityContext;
 
 import javax.inject.Inject;
@@ -62,7 +61,7 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
     public void validate(CreateOrder createOrder, SecurityContext securityContext){
         String consumingOrganizationId=createOrder.getConsumingOrganizationId();
         Organization consumingOrganization=consumingOrganizationId!=null?getByIdOrNull(consumingOrganizationId, Organization.class,null,securityContext):null;
-        if(consumingOrganization==null){
+        if(consumingOrganization==null && consumingOrganizationId!=null){
             throw new BadRequestException("No Organization with id "+consumingOrganizationId);
         }
         createOrder.setConsumingOrganization(consumingOrganization);
@@ -73,6 +72,8 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
             throw new BadRequestException("No Supplier with id "+supplierId);
         }
         createOrder.setSupplier(supplier);
+        int ordinal=orderRepository.getCurrentOrdinal(securityContext)+1;
+        createOrder.setOrdinal(ordinal);
     }
 
     @Override
@@ -129,6 +130,11 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
 
         if(createOrder.getOrderSentDate()!=null && (order.getOrderSentDate()==null||!createOrder.getOrderSentDate().equals(order.getOrderSentDate()))){
             order.setOrderSentDate(createOrder.getOrderSentDate());
+            update=true;
+        }
+
+        if(createOrder.getOrdinal()!=null &&createOrder.getOrdinal()!=order.getOrdinal()){
+            order.setOrdinal(createOrder.getOrdinal());
             update=true;
         }
         return update;

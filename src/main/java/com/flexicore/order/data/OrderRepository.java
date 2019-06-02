@@ -5,9 +5,11 @@ import com.flexicore.interfaces.AbstractRepositoryPlugin;
 import com.flexicore.model.QueryInformationHolder;
 import com.flexicore.order.interfaces.IOrderRepository;
 import com.flexicore.order.model.Order;
+import com.flexicore.order.model.Order_;
 import com.flexicore.order.request.OrderFiltering;
 import com.flexicore.security.SecurityContext;
 
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -41,4 +43,14 @@ public class OrderRepository extends AbstractRepositoryPlugin implements IOrderR
     }
 
 
+    public int getCurrentOrdinal(SecurityContext securityContext) {
+        CriteriaBuilder cb=em.getCriteriaBuilder();
+        CriteriaQuery<Order> q=cb.createQuery(Order.class);
+        Root<Order> r=q.from(Order.class);
+        q.select(r).where(cb.equal(r.get(Order_.tenant),securityContext.getTenantToCreateIn())).orderBy(cb.desc(r.get(Order_.ordinal)));
+        TypedQuery<Order> query = em.createQuery(q);
+        query.setFirstResult(0).setMaxResults(1);
+        List<Order> resultList = query.getResultList();
+        return resultList.isEmpty()?0:resultList.get(0).getOrdinal();
+    }
 }
