@@ -5,6 +5,7 @@ import com.flexicore.interfaces.ServicePlugin;
 import com.flexicore.order.model.Order;
 import com.flexicore.order.request.CreateOrder;
 import com.flexicore.order.request.OrderFiltering;
+import com.flexicore.order.request.SendOrder;
 import com.flexicore.order.request.UpdateOrder;
 import com.flexicore.security.SecurityContext;
 
@@ -19,6 +20,8 @@ public interface IOrderService extends ServicePlugin {
 
     void validate(CreateOrder order, SecurityContext securityContext);
 
+    void validate(SendOrder sendOrder, SecurityContext securityContext);
+
     Order createOrder(CreateOrder createOrder, SecurityContext securityContext);
 
     Order updateOrder(UpdateOrder updateOrder, SecurityContext securityContext);
@@ -26,4 +29,6 @@ public interface IOrderService extends ServicePlugin {
     Order createOrderNoMerge(CreateOrder createOrder, SecurityContext securityContext);
 
     boolean updateOrderNoMerge(Order order, CreateOrder createOrder);
+
+    Order sendOrder(SendOrder sendOrder, SecurityContext securityContext);
 }

@@ -7,6 +7,7 @@ import com.flexicore.order.data.OrderRepository;
 import com.flexicore.order.model.Order;
 import com.flexicore.order.request.CreateOrder;
 import com.flexicore.order.request.OrderFiltering;
+import com.flexicore.order.request.SendOrder;
 import com.flexicore.order.request.UpdateOrder;
 import com.flexicore.organization.model.Organization;
 import com.flexicore.organization.model.Supplier;
@@ -14,6 +15,7 @@ import com.flexicore.security.SecurityContext;
 
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -74,6 +76,16 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
         createOrder.setSupplier(supplier);
         int ordinal=orderRepository.getCurrentOrdinal(securityContext)+1;
         createOrder.setOrdinal(ordinal);
+    }
+
+    @Override
+    public void validate(SendOrder sendOrder, SecurityContext securityContext) {
+        String orderId = sendOrder.getId();
+        Order order = this.getByIdOrNull(orderId, Order.class, null, securityContext);
+        if (order == null) {
+            throw new BadRequestException("No Order with id " + orderId);
+        }
+        sendOrder.setOrder(order);
     }
 
     @Override
@@ -138,6 +150,14 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
             update=true;
         }
         return update;
+    }
+
+    @Override
+    public Order sendOrder(SendOrder sendOrder, SecurityContext securityContext) {
+        Order order = sendOrder.getOrder();
+        order.setOrderSentDate(LocalDateTime.now());
+        orderRepository.merge(order);
+        return order;
     }
 
     public <T extends Baseclass> List<T> listByIds(Class<T> c, Set<String> ids, SecurityContext securityContext) {

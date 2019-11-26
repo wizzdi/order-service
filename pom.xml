@@ -6,7 +6,7 @@
 
     <groupId>com.flexicore</groupId>
     <artifactId>order-service</artifactId>
-    <version>1.0.5</version>
+    <version>1.2.0</version>
     <properties>
         <version.jackson>2.9.5</version.jackson>
         <version.eclipselink>2.7.1</version.eclipselink>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>com.flexicore</groupId>
             <artifactId>product-model</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.15</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
