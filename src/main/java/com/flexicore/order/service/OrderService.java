@@ -160,21 +160,25 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
     @Override
     public Order sendOrder(SendOrder sendOrder, SecurityContext securityContext) {
         Order order = sendOrder.getOrder();
+        if (order.getOrderSentDate() != null) {
+            throw new BadRequestException("Order is already sent");
+        }
         SupplierApi supplierApi = order.getSupplier().getSupplierApi();
         if (supplierApi != null) {
             String canonicalName = supplierApi.getImplementorCanonicalName();
-            List<IOrderApiService> plugins = new ArrayList<>((Collection<IOrderApiService>)pluginService.getPlugins(IOrderApiService.class, null, null));
+            List<IOrderApiService> plugins = new ArrayList<>((Collection<IOrderApiService>) pluginService.getPlugins(IOrderApiService.class, null, null));
             try {
-                IOrderApiService orderApiService = null;
-                for (IOrderApiService plugin : plugins) {
-                    if (plugin.CheckImplementorCanonicalName(canonicalName)) {
-                        orderApiService = plugin;
-                    }
-                }
-                if (orderApiService == null) {
+                Optional<IOrderApiService> orderApiService = plugins.parallelStream().filter(n -> n.IsMatchImplementorCanonicalName(canonicalName)).findFirst();
+                if (!orderApiService.isPresent()) {
                     throw new BadRequestException("No OrderApiService under name " + canonicalName);
                 }
-                orderApiService.sendOrder(order);
+                IOrderApiService.Credentials credentials = new IOrderApiService.Credentials();
+                credentials.host = "81.218.245.170";
+                credentials.username = "smartsell";
+                credentials.password = "*********";
+                orderApiService.get().sendOrder(securityContext, credentials, order);
+            } catch (Exception ex) {
+                throw new BadRequestException("Failed to send order " + ex.getMessage());
             } finally {
                 for (IOrderApiService plugin : plugins) {
                     pluginService.cleanUpInstance(plugin);
