@@ -9,6 +9,6 @@ public interface IOrderApiService extends ServicePlugin {
         public String username;
         public String password;
     }
-    void sendOrder(SecurityContext securityContext, Credentials providerCredentials, Order order) throws Exception;
+    void sendOrder(Order order, Credentials providerCredentials, SecurityContext securityContext) throws Exception;
     boolean IsMatchImplementorCanonicalName(String implementorCanonicalName);
 }

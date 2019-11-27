@@ -176,7 +176,7 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
                 credentials.host = "81.218.245.170";
                 credentials.username = "smartsell";
                 credentials.password = "*********";
-                orderApiService.get().sendOrder(securityContext, credentials, order);
+                orderApiService.get().sendOrder(order, credentials, securityContext);
             } catch (Exception ex) {
                 throw new BadRequestException("Failed to send order " + ex.getMessage());
             } finally {
