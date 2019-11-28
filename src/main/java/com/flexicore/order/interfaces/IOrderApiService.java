@@ -1,14 +1,28 @@
 package com.flexicore.order.interfaces;
+
 import com.flexicore.interfaces.ServicePlugin;
 import com.flexicore.order.model.Order;
 import com.flexicore.security.SecurityContext;
 
+import java.util.List;
+
 public interface IOrderApiService extends ServicePlugin {
-    class Credentials {
-        public String host;
-        public String username;
-        public String password;
+
+    class OrderItem extends com.flexicore.order.model.OrderItem {
+        private String customerId;
+
+        public String getCustomerId() {
+            return customerId;
+        }
+
+        public <T extends OrderItem> T setCustomerId(String customerId) {
+            this.customerId = customerId;
+            return (T) this;
+        }
     }
-    void sendOrder(Order order, Credentials providerCredentials, SecurityContext securityContext) throws Exception;
-    boolean IsMatchImplementorCanonicalName(String implementorCanonicalName);
+
+    String implementorCanonicalName = null;
+
+    void sendOrder(Order order, List<OrderItem> orderItems, SecurityContext securityContext) throws Exception;
+
 }

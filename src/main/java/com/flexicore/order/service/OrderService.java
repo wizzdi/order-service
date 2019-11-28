@@ -157,9 +157,13 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
         return update;
     }
 
+//    @Override
+//    public Order sendOrder(SendOrder sendOrder, List<IOrderApiService.OrderItem> orderItems, SecurityContext securityContext) {
+//        return sendOrder(sendOrder.getOrder(), orderItems, securityContext);
+//    }
+
     @Override
-    public Order sendOrder(SendOrder sendOrder, SecurityContext securityContext) {
-        Order order = sendOrder.getOrder();
+    public Order sendOrder(Order order, List<IOrderApiService.OrderItem> orderItems, SecurityContext securityContext) {
         if (order.getOrderSentDate() != null) {
             throw new BadRequestException("Order is already sent");
         }
@@ -168,15 +172,15 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
             String canonicalName = supplierApi.getImplementorCanonicalName();
             List<IOrderApiService> plugins = new ArrayList<>((Collection<IOrderApiService>) pluginService.getPlugins(IOrderApiService.class, null, null));
             try {
-                Optional<IOrderApiService> orderApiService = plugins.parallelStream().filter(n -> n.IsMatchImplementorCanonicalName(canonicalName)).findFirst();
+                Optional<IOrderApiService> orderApiService = plugins.parallelStream().filter(n -> n.implementorCanonicalName == canonicalName).findFirst();
                 if (!orderApiService.isPresent()) {
                     throw new BadRequestException("No OrderApiService under name " + canonicalName);
                 }
-                IOrderApiService.Credentials credentials = new IOrderApiService.Credentials();
-                credentials.host = "81.218.245.170";
-                credentials.username = "smartsell";
-                credentials.password = "*********";
-                orderApiService.get().sendOrder(order, credentials, securityContext);
+//                IOrderApiService.Credentials credentials = new IOrderApiService.Credentials();
+//                credentials.host = "81.218.245.170";
+//                credentials.username = "smartsell";
+//                credentials.password = "*********";
+                orderApiService.get().sendOrder(order, orderItems, securityContext);
             } catch (Exception ex) {
                 throw new BadRequestException("Failed to send order " + ex.getMessage());
             } finally {

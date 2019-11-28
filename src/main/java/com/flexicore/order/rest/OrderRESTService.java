@@ -85,17 +85,17 @@ public class OrderRESTService implements RestServicePlugin {
 		return service.updateOrder(updateContainer, securityContext);
 	}
 
-	@POST
-	@Produces("application/json")
-	@Path("/sendOrder")
-	@Operation(summary = "sendOrder", description = "Send Order to provider using API")
-	public Order sendOrder(
-			@HeaderParam("authenticationKey") String authenticationKey,
-			SendOrder sendOrder,
-			@Context SecurityContext securityContext) {
-		service.validate(sendOrder, securityContext);
-		return service.sendOrder(sendOrder, securityContext);
-	}
+//	@POST
+//	@Produces("application/json")
+//	@Path("/sendOrder")
+//	@Operation(summary = "sendOrder", description = "Send Order to provider using API")
+//	public Order sendOrder(
+//			@HeaderParam("authenticationKey") String authenticationKey,
+//			SendOrder sendOrder,
+//			@Context SecurityContext securityContext) {
+//		service.validate(sendOrder, securityContext);
+//		return service.sendOrder(sendOrder, securityContext);
+//	}
 
 
 
