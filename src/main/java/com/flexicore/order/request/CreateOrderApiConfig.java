@@ -1,7 +1,12 @@
 package com.flexicore.order.request;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
+import com.flexicore.data.jsoncontainers.CrossLoaderResolver;
 import com.flexicore.order.model.OrderApiConfig;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS,property = "type")
+@JsonTypeIdResolver(CrossLoaderResolver.class)
 public class CreateOrderApiConfig {
     private String host;
     private String username;
