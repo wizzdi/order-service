@@ -20,8 +20,6 @@ public interface IOrderService extends ServicePlugin {
 
     void validate(CreateOrder order, SecurityContext securityContext);
 
-    void validate(SendOrder sendOrder, SecurityContext securityContext);
-
     Order createOrder(CreateOrder createOrder, SecurityContext securityContext);
 
     Order updateOrder(UpdateOrder updateOrder, SecurityContext securityContext);
@@ -30,6 +28,7 @@ public interface IOrderService extends ServicePlugin {
 
     boolean updateOrderNoMerge(Order order, CreateOrder createOrder);
 
-//    Order sendOrder(SendOrder sendOrder, List<IOrderApiService.OrderItem> orderItems, SecurityContext securityContext);
+    void validate(SendOrder sendOrder, SecurityContext securityContext);
+    //    Order sendOrder(SendOrder sendOrder, List<IOrderApiService.OrderItem> orderItems, SecurityContext securityContext);
     Order sendOrder(Order order, List<IOrderApiService.OrderItem> orderItems, SecurityContext securityContext);
 }

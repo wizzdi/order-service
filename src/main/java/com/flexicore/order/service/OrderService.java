@@ -176,6 +176,7 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
                 if (!orderApiService.isPresent()) {
                     throw new BadRequestException("No OrderApiService under name " + canonicalName);
                 }
+
 //                IOrderApiService.Credentials credentials = new IOrderApiService.Credentials();
 //                credentials.host = "81.218.245.170";
 //                credentials.username = "smartsell";
