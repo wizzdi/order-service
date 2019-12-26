@@ -1,5 +1,6 @@
 package com.flexicore.order.service;
 
+import com.amazonaws.util.DateUtils;
 import com.amazonaws.util.StringUtils;
 import com.flexicore.annotations.plugins.PluginInfo;
 import com.flexicore.order.data.OrderApiRepository;
@@ -17,6 +18,7 @@ import sun.rmi.transport.Endpoint;
 
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -174,6 +176,9 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
             }
             IOrderApiService orderApiService = suitable.get(0);
             orderApiService.sendOrder(sendOrder, securityContext);
+            Order order = sendOrder.getOrder();
+            order.setOrderSentDate(LocalDateTime.now());
+            repository.merge(order);
         } finally {
             for (IOrderApiService plugin : plugins) {
                 pluginService.cleanUpInstance(plugin);
