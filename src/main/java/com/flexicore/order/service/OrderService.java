@@ -4,21 +4,15 @@ import com.flexicore.annotations.plugins.PluginInfo;
 import com.flexicore.data.jsoncontainers.PaginationResponse;
 import com.flexicore.model.Baseclass;
 import com.flexicore.order.data.OrderRepository;
-import com.flexicore.order.interfaces.IOrderApiService;
 import com.flexicore.order.model.Order;
 import com.flexicore.order.request.CreateOrder;
 import com.flexicore.order.request.OrderFiltering;
-import com.flexicore.order.request.SendOrder;
 import com.flexicore.order.request.UpdateOrder;
 import com.flexicore.organization.model.Organization;
 import com.flexicore.organization.model.Supplier;
-import com.flexicore.organization.model.SupplierApi;
 import com.flexicore.security.SecurityContext;
-import com.flexicore.service.PluginService;
-
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,9 +22,6 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
     @Inject
     @PluginInfo(version = 1)
     private OrderRepository orderRepository;
-
-    @Inject
-    private PluginService pluginService;
 
     @Override
     public PaginationResponse<Order> getAllOrders(OrderFiltering orderFiltering, SecurityContext securityContext) {
@@ -80,16 +71,6 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
         createOrder.setSupplier(supplier);
         int ordinal = orderRepository.getCurrentOrdinal(securityContext) + 1;
         createOrder.setOrdinal(ordinal);
-    }
-
-    @Override
-    public void validate(SendOrder sendOrder, SecurityContext securityContext) {
-        String orderId = sendOrder.getId();
-        Order order = this.getByIdOrNull(orderId, Order.class, null, securityContext);
-        if (order == null) {
-            throw new BadRequestException("No Order with id " + orderId);
-        }
-        sendOrder.setOrder(order);
     }
 
     @Override
@@ -155,44 +136,6 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
             update = true;
         }
         return update;
-    }
-
-//    @Override
-//    public Order sendOrder(SendOrder sendOrder, List<IOrderApiService.OrderItem> orderItems, SecurityContext securityContext) {
-//        return sendOrder(sendOrder.getOrder(), orderItems, securityContext);
-//    }
-
-    @Override
-    public Order sendOrder(Order order, List<IOrderApiService.OrderItem> orderItems, SecurityContext securityContext) {
-        if (order.getOrderSentDate() != null) {
-            throw new BadRequestException("Order is already sent");
-        }
-        SupplierApi supplierApi = order.getSupplier().getSupplierApi();
-        if (supplierApi != null) {
-            String canonicalName = supplierApi.getImplementorCanonicalName();
-            List<IOrderApiService> plugins = new ArrayList<>((Collection<IOrderApiService>) pluginService.getPlugins(IOrderApiService.class, null, null));
-            try {
-                Optional<IOrderApiService> orderApiService = plugins.parallelStream().filter(n -> n.implementorCanonicalName == canonicalName).findFirst();
-                if (!orderApiService.isPresent()) {
-                    throw new BadRequestException("No OrderApiService under name " + canonicalName);
-                }
-
-//                IOrderApiService.Credentials credentials = new IOrderApiService.Credentials();
-//                credentials.host = "81.218.245.170";
-//                credentials.username = "smartsell";
-//                credentials.password = "*********";
-                orderApiService.get().sendOrder(order, orderItems, securityContext);
-            } catch (Exception ex) {
-                throw new BadRequestException("Failed to send order " + ex.getMessage());
-            } finally {
-                for (IOrderApiService plugin : plugins) {
-                    pluginService.cleanUpInstance(plugin);
-                }
-            }
-        }
-        order.setOrderSentDate(LocalDateTime.now());
-        orderRepository.merge(order);
-        return order;
     }
 
     public <T extends Baseclass> List<T> listByIds(Class<T> c, Set<String> ids, SecurityContext securityContext) {

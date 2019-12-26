@@ -8,8 +8,9 @@ import com.flexicore.interfaces.RestServicePlugin;
 import com.flexicore.order.model.OrderApiConfig;
 import com.flexicore.order.request.CreateOrderApiConfig;
 import com.flexicore.order.request.OrderApiConfigFiltering;
+import com.flexicore.order.request.SendOrder;
 import com.flexicore.order.request.UpdateOrderApiConfig;
-import com.flexicore.order.service.OrderApiConfigService;
+import com.flexicore.order.service.OrderApiInvokerService;
 import com.flexicore.security.SecurityContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,18 +27,18 @@ import java.util.List;
 @PluginInfo(version = 1)
 @OperationsInside
 @Interceptors({SecurityImposer.class, DynamicResourceInjector.class})
-@Path("plugins/OrderApiConfig")
-@Tag(name = "OrderApiConfig")
-public class OrderApiConfigRESTService implements RestServicePlugin {
+@Path("plugins/OrderApi")
+@Tag(name = "OrderApi")
+public class OrderApiRESTService implements RestServicePlugin {
 
     @Inject
     @PluginInfo(version = 1)
-    private OrderApiConfigService service;
+    private OrderApiInvokerService service;
 
     @POST
     @Produces("application/json")
     @Path("/createOrderApiConfig")
-    @Operation(summary = "createOrderApiConfig", description = "Creates Configuration instance for API")
+    @Operation(summary = "createOrderApiConfig", description = "Creates configuration instance for API")
     public OrderApiConfig createOrderApiConfig(
             @HeaderParam("authenticationKey") String authenticationKey,
             CreateOrderApiConfig creationContainer,
@@ -49,24 +50,36 @@ public class OrderApiConfigRESTService implements RestServicePlugin {
     @POST
     @Produces("application/json")
     @Path("/updateOrderApiConfig")
-    @Operation(summary = "updateOrderApiConfig", description = "Updates Configuration instance for API")
+    @Operation(summary = "updateOrderApiConfig", description = "Updates configuration instance for API")
     public OrderApiConfig updateOrderApiConfig(
             @HeaderParam("authenticationKey") String authenticationKey,
             UpdateOrderApiConfig updateContainer,
             @Context SecurityContext securityContext) {
         service.validate(updateContainer, securityContext);
-        return service.createOrderApiConfig(updateContainer, securityContext);
+        return service.updateOrderApiConfig(updateContainer, securityContext);
     }
 
     @POST
     @Produces("application/json")
-    @Path("/listOrderApiConfigs")
-    @Operation(summary = "listOrderApiConfigs", description = "Get Configuration instances for API")
-    public List<OrderApiConfig> listOrderApiConfigs(
+    @Path("/listAllOrderApiConfigs")
+    @Operation(summary = "listAllOrderApiConfigs", description = "Get all configuration instances for API")
+    public List<OrderApiConfig> listAllOrderApiConfigs(
             @HeaderParam("authenticationKey") String authenticationKey,
             OrderApiConfigFiltering filtering,
             @Context SecurityContext securityContext) {
         return service.getOrderApiConfigs(filtering, securityContext);
+    }
+
+    @POST
+    @Produces("application/json")
+    @Path("/SendOrder")
+    @Operation(summary = "SendOrder", description = "Get all configuration instances for API")
+    public void SendOrder(
+            @HeaderParam("authenticationKey") String authenticationKey,
+            SendOrder sendOrder,
+            @Context SecurityContext securityContext) {
+        service.validate(sendOrder, securityContext);
+        service.sendOrder(sendOrder, securityContext);
     }
 
 }

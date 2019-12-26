@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @PluginInfo(version = 1)
-public class OrderApiConfigRepository extends AbstractRepositoryPlugin {
+public class OrderApiRepository extends AbstractRepositoryPlugin {
     public List<OrderApiConfig> listAllOrderApiConfig(SecurityContext securityContext, OrderApiConfigFiltering filtering) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<OrderApiConfig> q = cb.createQuery(OrderApiConfig.class);

@@ -2,27 +2,18 @@ package com.flexicore.order.interfaces;
 
 import com.flexicore.interfaces.ServicePlugin;
 import com.flexicore.order.model.Order;
+import com.flexicore.order.model.OrderApiConfig;
+import com.flexicore.order.request.CreateOrderApiConfig;
+import com.flexicore.order.request.SendOrder;
 import com.flexicore.security.SecurityContext;
 
 import java.util.List;
 
 public interface IOrderApiService extends ServicePlugin {
 
-    class OrderItem extends com.flexicore.order.model.OrderItem {
-        private String customerId;
-
-        public String getCustomerId() {
-            return customerId;
-        }
-
-        public <T extends OrderItem> T setCustomerId(String customerId) {
-            this.customerId = customerId;
-            return (T) this;
-        }
-    }
-
-    String implementorCanonicalName = null;
-
-    void sendOrder(Order order, List<OrderItem> orderItems, SecurityContext securityContext) throws Exception;
-
+    Class<? extends OrderApiConfig> getConfigurationType();
+    Class<? extends CreateOrderApiConfig> getCreateContainerType();
+    OrderApiConfig createNoMerge(CreateOrderApiConfig createOrderApiConfig, SecurityContext securityContext);
+    boolean updateNoMerge(CreateOrderApiConfig createOrderApiConfig, OrderApiConfig orderApiConfig);
+    Order sendOrder(SendOrder sendOrder, SecurityContext securityContext);
 }

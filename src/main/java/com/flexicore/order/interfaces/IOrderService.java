@@ -27,8 +27,4 @@ public interface IOrderService extends ServicePlugin {
     Order createOrderNoMerge(CreateOrder createOrder, SecurityContext securityContext);
 
     boolean updateOrderNoMerge(Order order, CreateOrder createOrder);
-
-    void validate(SendOrder sendOrder, SecurityContext securityContext);
-    //    Order sendOrder(SendOrder sendOrder, List<IOrderApiService.OrderItem> orderItems, SecurityContext securityContext);
-    Order sendOrder(Order order, List<IOrderApiService.OrderItem> orderItems, SecurityContext securityContext);
 }

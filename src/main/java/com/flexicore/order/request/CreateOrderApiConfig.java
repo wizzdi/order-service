@@ -9,12 +9,32 @@ import com.flexicore.organization.model.Supplier;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS,property = "type")
 @JsonTypeIdResolver(CrossLoaderResolver.class)
 public class CreateOrderApiConfig {
+    private String name;
+    private String description;
     private String supplierId;
     @JsonIgnore
     private Supplier supplier;
     private String host;
     private String username;
     private String password;
+
+    public String getName() {
+        return name;
+    }
+
+    public <T extends CreateOrderApiConfig> T setName(String name) {
+        this.name = name;
+        return (T) this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public <T extends CreateOrderApiConfig> T setDescription(String description) {
+        this.description = description;
+        return (T) this;
+    }
 
     public String getHost() {
         return host;
