@@ -1,6 +1,5 @@
 package com.flexicore.order.service;
 
-import com.amazonaws.util.DateUtils;
 import com.amazonaws.util.StringUtils;
 import com.flexicore.annotations.plugins.PluginInfo;
 import com.flexicore.order.data.OrderApiRepository;
@@ -9,21 +8,30 @@ import com.flexicore.order.interfaces.IOrderApiInvokerService;
 import com.flexicore.order.interfaces.IOrderApiService;
 import com.flexicore.order.model.Order;
 import com.flexicore.order.model.OrderApiConfig;
-import com.flexicore.order.model.OrderItem;
-import com.flexicore.order.request.*;
+import com.flexicore.order.request.CreateOrderApiConfig;
+import com.flexicore.order.request.OrderApiConfigFiltering;
+import com.flexicore.order.request.SendOrder;
+import com.flexicore.order.request.UpdateOrderApiConfig;
 import com.flexicore.organization.model.Supplier;
 import com.flexicore.security.SecurityContext;
 import com.flexicore.service.PluginService;
-import sun.rmi.transport.Endpoint;
+import org.apache.http.HttpException;
 
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @PluginInfo(version = 1)
 public class OrderApiInvokerService implements IOrderApiInvokerService {
+
+    @Inject
+    private Logger logger;
 
     @Inject
     private PluginService pluginService;
@@ -163,6 +171,7 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
         if (orderApiConfig == null) {
             throw new BadRequestException("No OrderApiConfig with id " + orderId);
         }
+        sendOrder.setOrderApiConfig(orderApiConfig);
     }
 
     @Override
@@ -179,6 +188,10 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
             Order order = sendOrder.getOrder();
             order.setOrderSentDate(LocalDateTime.now());
             repository.merge(order);
+        } catch (Exception ex) {
+            String error = "Failed to send order to provider, orderId: " + sendOrder.getOrderId();
+            logger.log(Level.SEVERE, error, ex);
+            throw new BadRequestException(error);
         } finally {
             for (IOrderApiService plugin : plugins) {
                 pluginService.cleanUpInstance(plugin);

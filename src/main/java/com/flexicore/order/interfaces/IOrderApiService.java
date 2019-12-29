@@ -12,5 +12,5 @@ public interface IOrderApiService extends ServicePlugin {
     Class<? extends CreateOrderApiConfig> getCreateContainerType();
     OrderApiConfig createNoMerge(CreateOrderApiConfig createOrderApiConfig, SecurityContext securityContext);
     boolean updateNoMerge(CreateOrderApiConfig createOrderApiConfig, OrderApiConfig orderApiConfig);
-    void sendOrder(SendOrder sendOrder, SecurityContext securityContext);
+    void sendOrder(SendOrder sendOrder, SecurityContext securityContext) throws Exception;
 }
