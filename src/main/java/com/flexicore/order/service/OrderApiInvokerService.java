@@ -50,15 +50,15 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
         if (createOrderApiConfig.getSupplier() == null) {
             throw new BadRequestException("No Supplier with id " + createOrderApiConfig.getSupplierId());
         }
-        if (StringUtils.isNullOrEmpty(createOrderApiConfig.getHost())) {
-            throw new BadRequestException("Host in not provided");
-        }
-        if (StringUtils.isNullOrEmpty(createOrderApiConfig.getUsername())) {
-            throw new BadRequestException("Username in not provided");
-        }
-        if (StringUtils.isNullOrEmpty(createOrderApiConfig.getPassword())) {
-            throw new BadRequestException("Password in not provided");
-        }
+//        if (StringUtils.isNullOrEmpty(createOrderApiConfig.getHost())) {
+//            throw new BadRequestException("Host in not provided");
+//        }
+//        if (StringUtils.isNullOrEmpty(createOrderApiConfig.getUsername())) {
+//            throw new BadRequestException("Username in not provided");
+//        }
+//        if (StringUtils.isNullOrEmpty(createOrderApiConfig.getPassword())) {
+//            throw new BadRequestException("Password in not provided");
+//        }
     }
 
     private boolean updateNoMerge(CreateOrderApiConfig createOrderApiConfig, OrderApiConfig orderApiConfig) {
@@ -66,6 +66,14 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
         if (createOrderApiConfig.getSupplier() != null && !createOrderApiConfig.getSupplierId().equals(orderApiConfig.getSupplierId())) {
             orderApiConfig.setSupplier(createOrderApiConfig.getSupplier());
             orderApiConfig.setSupplierId(createOrderApiConfig.getSupplierId());
+            update = true;
+        }
+        if (createOrderApiConfig.getName() != null && !createOrderApiConfig.getName().equals(orderApiConfig.getName())) {
+            orderApiConfig.setName(createOrderApiConfig.getName());
+            update = true;
+        }
+        if (createOrderApiConfig.getDescription() != null && !createOrderApiConfig.getDescription().equals(orderApiConfig.getDescription())) {
+            orderApiConfig.setDescription(createOrderApiConfig.getDescription());
             update = true;
         }
         if (createOrderApiConfig.getHost() != null && !createOrderApiConfig.getHost().equals(orderApiConfig.getHost())) {
@@ -175,8 +183,9 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
     }
 
     @Override
-    public void sendOrder(SendOrder sendOrder, SecurityContext securityContext) {
+    public Order sendOrder(SendOrder sendOrder, SecurityContext securityContext) {
         List<IOrderApiService> plugins = new ArrayList<>((Collection<IOrderApiService>) pluginService.getPlugins(IOrderApiService.class, null, null));
+        Order order = sendOrder.getOrder();
         try {
             Class<? extends OrderApiConfig> aClass = sendOrder.getOrderApiConfig().getClass();
             List<IOrderApiService> suitable = plugins.parallelStream().filter(f -> aClass.equals(f.getConfigurationType())).collect(Collectors.toList());
@@ -185,7 +194,6 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
             }
             IOrderApiService orderApiService = suitable.get(0);
             orderApiService.sendOrder(sendOrder, securityContext);
-            Order order = sendOrder.getOrder();
             order.setOrderSentDate(LocalDateTime.now());
             repository.merge(order);
         } catch (Exception ex) {
@@ -196,6 +204,7 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
             for (IOrderApiService plugin : plugins) {
                 pluginService.cleanUpInstance(plugin);
             }
+            return order;
         }
     }
 }

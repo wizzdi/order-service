@@ -5,6 +5,7 @@ import com.flexicore.annotations.plugins.PluginInfo;
 import com.flexicore.interceptors.DynamicResourceInjector;
 import com.flexicore.interceptors.SecurityImposer;
 import com.flexicore.interfaces.RestServicePlugin;
+import com.flexicore.order.model.Order;
 import com.flexicore.order.model.OrderApiConfig;
 import com.flexicore.order.request.CreateOrderApiConfig;
 import com.flexicore.order.request.OrderApiConfigFiltering;
@@ -74,12 +75,12 @@ public class OrderApiRESTService implements RestServicePlugin {
     @Produces("application/json")
     @Path("/SendOrder")
     @Operation(summary = "SendOrder", description = "Get all configuration instances for API")
-    public void SendOrder(
+    public Order SendOrder(
             @HeaderParam("authenticationKey") String authenticationKey,
             SendOrder sendOrder,
             @Context SecurityContext securityContext) {
         service.validate(sendOrder, securityContext);
-        service.sendOrder(sendOrder, securityContext);
+        return service.sendOrder(sendOrder, securityContext);
     }
 
 }

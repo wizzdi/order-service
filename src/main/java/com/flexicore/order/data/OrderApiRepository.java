@@ -39,7 +39,8 @@ public class OrderApiRepository extends AbstractRepositoryPlugin {
     }
 
     private void addPredicate(OrderApiConfigFiltering filtering, CriteriaBuilder cb, Root<OrderApiConfig> r, List<Predicate> preds) {
-//        Join<OrderApiConfig, OrderApiConfigToSupplier> linkJoin = null;
+
+        //        Join<OrderApiConfig, OrderApiConfigToSupplier> linkJoin = null;
 //        if(filtering.getHasActiveLinks() && filtering.getOrderApiConfigs() != null && !filtering.getSuppliers().isEmpty()){
 //            linkJoin = linkJoin == null ? r.join(OrderApiConfig_.suppliers) : linkJoin;
 //            preds.add(cb.equal(linkJoin.get(OrderApiConfigToSupplier_.enabled),filtering.getHasActiveLinks()));
