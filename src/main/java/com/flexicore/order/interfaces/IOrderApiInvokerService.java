@@ -1,5 +1,6 @@
 package com.flexicore.order.interfaces;
 
+import com.flexicore.data.jsoncontainers.PaginationResponse;
 import com.flexicore.interfaces.ServicePlugin;
 import com.flexicore.order.model.Order;
 import com.flexicore.order.model.OrderApiConfig;
@@ -14,7 +15,7 @@ public interface IOrderApiInvokerService extends ServicePlugin {
     void validate(UpdateOrderApiConfig updateOrderApiConfig, SecurityContext securityContext);
     OrderApiConfig updateOrderApiConfig(UpdateOrderApiConfig updateOrderApiConfig, SecurityContext securityContext);
     void validate(OrderApiConfigFiltering filtering, SecurityContext securityContext);
-    List<OrderApiConfig> getOrderApiConfigs(OrderApiConfigFiltering filtering, SecurityContext securityContext);
+    PaginationResponse<OrderApiConfig> getOrderApiConfigs(OrderApiConfigFiltering filtering, SecurityContext securityContext);
     void validate(SendOrder sendOrder, SecurityContext securityContext);
     Order sendOrder(SendOrder SendOrder, SecurityContext securityContext);
 

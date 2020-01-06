@@ -2,16 +2,15 @@ package com.flexicore.order.service;
 
 import com.amazonaws.util.StringUtils;
 import com.flexicore.annotations.plugins.PluginInfo;
+import com.flexicore.data.jsoncontainers.PaginationResponse;
 import com.flexicore.order.data.OrderApiRepository;
 import com.flexicore.order.data.OrderItemRepository;
 import com.flexicore.order.interfaces.IOrderApiInvokerService;
 import com.flexicore.order.interfaces.IOrderApiService;
 import com.flexicore.order.model.Order;
 import com.flexicore.order.model.OrderApiConfig;
-import com.flexicore.order.request.CreateOrderApiConfig;
-import com.flexicore.order.request.OrderApiConfigFiltering;
-import com.flexicore.order.request.SendOrder;
-import com.flexicore.order.request.UpdateOrderApiConfig;
+import com.flexicore.order.model.OrderItem;
+import com.flexicore.order.request.*;
 import com.flexicore.organization.model.Supplier;
 import com.flexicore.security.SecurityContext;
 import com.flexicore.service.PluginService;
@@ -159,8 +158,10 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
     }
 
     @Override
-    public List<OrderApiConfig> getOrderApiConfigs(OrderApiConfigFiltering filtering, SecurityContext securityContext) {
-        return repository.listAllOrderApiConfig(securityContext, filtering);
+    public PaginationResponse<OrderApiConfig> getOrderApiConfigs(OrderApiConfigFiltering filtering, SecurityContext securityContext) {
+        List<OrderApiConfig> list = repository.listAllOrderApiConfig(securityContext, filtering);
+        long count = repository.countAllOrderApiConfig(securityContext, filtering);
+        return new PaginationResponse<>(list, filtering, count);
     }
 
     @Override

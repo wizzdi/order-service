@@ -2,6 +2,7 @@ package com.flexicore.order.rest;
 
 import com.flexicore.annotations.OperationsInside;
 import com.flexicore.annotations.plugins.PluginInfo;
+import com.flexicore.data.jsoncontainers.PaginationResponse;
 import com.flexicore.interceptors.DynamicResourceInjector;
 import com.flexicore.interceptors.SecurityImposer;
 import com.flexicore.interfaces.RestServicePlugin;
@@ -64,7 +65,7 @@ public class OrderApiRESTService implements RestServicePlugin {
     @Produces("application/json")
     @Path("/listAllOrderApiConfigs")
     @Operation(summary = "listAllOrderApiConfigs", description = "Get all configuration instances for API")
-    public List<OrderApiConfig> listAllOrderApiConfigs(
+    public PaginationResponse<OrderApiConfig> listAllOrderApiConfigs(
             @HeaderParam("authenticationKey") String authenticationKey,
             OrderApiConfigFiltering filtering,
             @Context SecurityContext securityContext) {
