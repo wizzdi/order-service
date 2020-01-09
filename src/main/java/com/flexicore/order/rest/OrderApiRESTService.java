@@ -1,10 +1,10 @@
 package com.flexicore.order.rest;
 
 import com.flexicore.annotations.OperationsInside;
+import com.flexicore.annotations.ProtectedREST;
 import com.flexicore.annotations.plugins.PluginInfo;
 import com.flexicore.data.jsoncontainers.PaginationResponse;
-import com.flexicore.interceptors.DynamicResourceInjector;
-import com.flexicore.interceptors.SecurityImposer;
+import com.flexicore.annotations.ProtectedREST;
 import com.flexicore.interfaces.RestServicePlugin;
 import com.flexicore.order.model.Order;
 import com.flexicore.order.model.OrderApiConfig;
@@ -24,11 +24,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import java.util.List;
 
 @PluginInfo(version = 1)
 @OperationsInside
-@Interceptors({SecurityImposer.class, DynamicResourceInjector.class})
+@ProtectedREST
 @Path("plugins/OrderApi")
 @Tag(name = "OrderApi")
 public class OrderApiRESTService implements RestServicePlugin {
@@ -69,6 +68,7 @@ public class OrderApiRESTService implements RestServicePlugin {
             @HeaderParam("authenticationKey") String authenticationKey,
             OrderApiConfigFiltering filtering,
             @Context SecurityContext securityContext) {
+        service.validate(filtering, securityContext);
         return service.getOrderApiConfigs(filtering, securityContext);
     }
 
