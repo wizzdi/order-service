@@ -130,7 +130,10 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
     @Override
     public void validate(UpdateOrderApiConfig updateOrderApiConfig, SecurityContext securityContext) {
         OrderApiConfig orderApiConfig = repository.getById(updateOrderApiConfig.getId(), OrderApiConfig.class, null, securityContext);
+        Supplier supplier = repository.getById(orderApiConfig.getSupplierId(), Supplier.class, null, securityContext);
+        orderApiConfig.setSupplier(supplier);
         updateOrderApiConfig.setOrderApiConfig(orderApiConfig);
+        updateOrderApiConfig.getCreateOrderApiConfig().setSupplierId(orderApiConfig.getSupplierId());
         validate(updateOrderApiConfig.getCreateOrderApiConfig(), securityContext);
     }
 
@@ -140,7 +143,7 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
         try {
             OrderApiConfig orderApiConfig = updateOrderApiConfig.getOrderApiConfig();
             boolean updated = orderApiConfigImplementor.updateNoMerge(updateOrderApiConfig.getCreateOrderApiConfig(), orderApiConfig);
-            updated = updated || this.updateNoMerge(updateOrderApiConfig.getCreateOrderApiConfig(), orderApiConfig);
+            updated = this.updateNoMerge(updateOrderApiConfig.getCreateOrderApiConfig(), orderApiConfig) || updated;
             if (updated) {
                 repository.merge(orderApiConfig);
             }

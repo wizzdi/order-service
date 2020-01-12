@@ -74,9 +74,9 @@ public class OrderApiRESTService implements RestServicePlugin {
 
     @POST
     @Produces("application/json")
-    @Path("/SendOrder")
-    @Operation(summary = "SendOrder", description = "Get all configuration instances for API")
-    public Order SendOrder(
+    @Path("/sendOrder")
+    @Operation(summary = "sendOrder", description = "Get all configuration instances for API")
+    public Order sendOrder(
             @HeaderParam("authenticationKey") String authenticationKey,
             SendOrder sendOrder,
             @Context SecurityContext securityContext) {
