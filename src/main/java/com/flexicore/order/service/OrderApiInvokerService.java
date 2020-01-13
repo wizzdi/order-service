@@ -197,18 +197,18 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
                 throw new BadRequestException("No service is suitable to handle request:" + aClass);
             }
             IOrderApiService orderApiService = suitable.get(0);
-            orderApiService.sendOrder(sendOrder, securityContext);
             order.setOrderSentDate(LocalDateTime.now());
+            orderApiService.sendOrder(sendOrder, securityContext);
             repository.merge(order);
+            return order;
         } catch (Exception ex) {
-            String error = "Failed to send order to provider, orderId: " + sendOrder.getOrderId();
+            String error = "Failed to send order to provider, orderId: " + sendOrder.getOrderId() + " " + ex.getMessage();
             logger.log(Level.SEVERE, error, ex);
             throw new BadRequestException(error);
         } finally {
             for (IOrderApiService plugin : plugins) {
                 pluginService.cleanUpInstance(plugin);
             }
-            return order;
         }
     }
 }
