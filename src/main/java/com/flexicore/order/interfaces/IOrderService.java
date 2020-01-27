@@ -5,6 +5,7 @@ import com.flexicore.interfaces.ServicePlugin;
 import com.flexicore.order.model.Order;
 import com.flexicore.order.request.CreateOrder;
 import com.flexicore.order.request.OrderFiltering;
+import com.flexicore.order.request.SendOrder;
 import com.flexicore.order.request.UpdateOrder;
 import com.flexicore.security.SecurityContext;
 

@@ -3,8 +3,8 @@ package com.flexicore.order.rest;
 import com.flexicore.annotations.OperationsInside;
 import com.flexicore.annotations.plugins.PluginInfo;
 import com.flexicore.data.jsoncontainers.PaginationResponse;
-import com.flexicore.interceptors.DynamicResourceInjector;
-import com.flexicore.interceptors.SecurityImposer;
+
+import com.flexicore.annotations.ProtectedREST;
 import com.flexicore.interfaces.RestServicePlugin;
 import com.flexicore.order.model.OrderItem;
 import com.flexicore.order.request.CreateOrderItem;
@@ -22,7 +22,7 @@ import javax.ws.rs.core.Context;
 
 @PluginInfo(version = 1)
 @OperationsInside
-@Interceptors({SecurityImposer.class, DynamicResourceInjector.class})
+@ProtectedREST
 @Path("plugins/OrderItem")
 @Tag(name="OrderItem")
 public class OrderItemRESTService implements RestServicePlugin {
