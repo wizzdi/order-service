@@ -35,6 +35,7 @@ public class SendOrder {
         return (T) this;
     }
 
+    @JsonIgnore
     public Order getOrder() {
         return order;
     }
@@ -44,6 +45,7 @@ public class SendOrder {
         return (T) this;
     }
 
+    @JsonIgnore
     public OrderApiConfig getOrderApiConfig() {
         return orderApiConfig;
     }
