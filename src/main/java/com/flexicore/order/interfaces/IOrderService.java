@@ -18,7 +18,9 @@ public interface IOrderService extends ServicePlugin {
 
     void validate(OrderFiltering orderFiltering, SecurityContext securityContext);
 
-    void validate(CreateOrder order, SecurityContext securityContext);
+    void validate(CreateOrder createOrder, SecurityContext securityContext);
+
+    void validate(UpdateOrder updateOrder, SecurityContext securityContext);
 
     Order createOrder(CreateOrder createOrder, SecurityContext securityContext);
 

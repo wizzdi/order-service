@@ -1,6 +1,7 @@
 package com.flexicore.order.service;
 
 import com.flexicore.annotations.plugins.PluginInfo;
+import com.flexicore.annotations.rest.Update;
 import com.flexicore.data.jsoncontainers.PaginationResponse;
 import com.flexicore.model.Baseclass;
 import com.flexicore.order.data.OrderRepository;
@@ -11,6 +12,7 @@ import com.flexicore.order.request.UpdateOrder;
 import com.flexicore.organization.model.Organization;
 import com.flexicore.organization.model.Supplier;
 import com.flexicore.security.SecurityContext;
+
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import java.util.*;
@@ -56,6 +58,17 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
 
     @Override
     public void validate(CreateOrder createOrder, SecurityContext securityContext) {
+        this.validateUpsertOrder(createOrder, securityContext);
+        int ordinal = orderRepository.getCurrentOrdinal(securityContext) + 1;
+        createOrder.setOrdinal(ordinal);
+    }
+
+    @Override
+    public void validate(UpdateOrder updateOrder, SecurityContext securityContext) {
+        this.validateUpsertOrder(updateOrder, securityContext);
+    }
+
+    private void validateUpsertOrder(CreateOrder createOrder, SecurityContext securityContext) {
         String consumingOrganizationId = createOrder.getConsumingOrganizationId();
         Organization consumingOrganization = consumingOrganizationId != null ? getByIdOrNull(consumingOrganizationId, Organization.class, null, securityContext) : null;
         if (consumingOrganization == null && consumingOrganizationId != null) {
@@ -69,8 +82,6 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
             throw new BadRequestException("No Supplier with id " + supplierId);
         }
         createOrder.setSupplier(supplier);
-        int ordinal = orderRepository.getCurrentOrdinal(securityContext) + 1;
-        createOrder.setOrdinal(ordinal);
     }
 
     @Override
