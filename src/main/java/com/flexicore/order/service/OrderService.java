@@ -1,7 +1,6 @@
 package com.flexicore.order.service;
 
 import com.flexicore.annotations.plugins.PluginInfo;
-import com.flexicore.annotations.rest.Update;
 import com.flexicore.data.jsoncontainers.PaginationResponse;
 import com.flexicore.model.Baseclass;
 import com.flexicore.order.data.OrderRepository;
@@ -65,6 +64,11 @@ public class OrderService implements com.flexicore.order.interfaces.IOrderServic
 
     @Override
     public void validate(UpdateOrder updateOrder, SecurityContext securityContext) {
+        Order Order = orderRepository.getByIdOrNull(updateOrder.getId(), Order.class, null, securityContext);
+        if (Order == null) {
+            throw new BadRequestException("no Order with id " + updateOrder.getId());
+        }
+        updateOrder.setOrder(Order);
         this.validateUpsertOrder(updateOrder, securityContext);
     }
 

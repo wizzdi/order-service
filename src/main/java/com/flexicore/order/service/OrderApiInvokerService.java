@@ -113,9 +113,31 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
     }
 
     @Override
-    public OrderApiConfig createOrderApiConfig(CreateOrderApiConfig createOrderApiConfig, SecurityContext securityContext) {
-        IOrderApiService orderApiConfigImplementor = this.getOrderApiConfigImplementor(createOrderApiConfig);
+    public IOrderApiService getOrderApiConfigImplementor(OrderApiConfig orderApiConfig) {
+        List<IOrderApiService> plugins = new ArrayList<>((Collection<IOrderApiService>) pluginService.getPlugins(IOrderApiService.class, null, null));
+        IOrderApiService result = null;
         try {
+            Class<? extends OrderApiConfig> aClass = orderApiConfig.getClass();
+            List<IOrderApiService> suitable = plugins.parallelStream().filter(f -> aClass.equals(f.getConfigurationType())).collect(Collectors.toList());
+            if (suitable.isEmpty()) {
+                throw new BadRequestException("No service is suitable to handle request:" + aClass);
+            }
+            result = suitable.get(0);
+            return result;
+        } finally {
+            for (IOrderApiService plugin : plugins) {
+                if (plugin != result) {
+                    pluginService.cleanUpInstance(plugin);
+                }
+            }
+        }
+    }
+
+    @Override
+    public OrderApiConfig createOrderApiConfig(CreateOrderApiConfig createOrderApiConfig, SecurityContext securityContext) {
+        IOrderApiService orderApiConfigImplementor = null;
+        try {
+            orderApiConfigImplementor = this.getOrderApiConfigImplementor(createOrderApiConfig);
             OrderApiConfig orderApiConfig = orderApiConfigImplementor.createNoMerge(createOrderApiConfig, securityContext);
             this.updateNoMerge(createOrderApiConfig, orderApiConfig);
             repository.merge(orderApiConfig);
@@ -139,8 +161,9 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
 
     @Override
     public OrderApiConfig updateOrderApiConfig(UpdateOrderApiConfig updateOrderApiConfig, SecurityContext securityContext) {
-        IOrderApiService orderApiConfigImplementor = this.getOrderApiConfigImplementor(updateOrderApiConfig.getCreateOrderApiConfig());
+        IOrderApiService orderApiConfigImplementor = null;
         try {
+            orderApiConfigImplementor = this.getOrderApiConfigImplementor(updateOrderApiConfig.getCreateOrderApiConfig());
             OrderApiConfig orderApiConfig = updateOrderApiConfig.getOrderApiConfig();
             boolean updated = orderApiConfigImplementor.updateNoMerge(updateOrderApiConfig.getCreateOrderApiConfig(), orderApiConfig);
             updated = this.updateNoMerge(updateOrderApiConfig.getCreateOrderApiConfig(), orderApiConfig) || updated;
@@ -188,17 +211,12 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
 
     @Override
     public Order sendOrder(SendOrder sendOrder, SecurityContext securityContext) {
-        List<IOrderApiService> plugins = new ArrayList<>((Collection<IOrderApiService>) pluginService.getPlugins(IOrderApiService.class, null, null));
-        Order order = sendOrder.getOrder();
+        IOrderApiService orderApiConfigImplementor = null;
         try {
-            Class<? extends OrderApiConfig> aClass = sendOrder.getOrderApiConfig().getClass();
-            List<IOrderApiService> suitable = plugins.parallelStream().filter(f -> aClass.equals(f.getConfigurationType())).collect(Collectors.toList());
-            if (suitable.isEmpty()) {
-                throw new BadRequestException("No service is suitable to handle request:" + aClass);
-            }
-            IOrderApiService orderApiService = suitable.get(0);
+            orderApiConfigImplementor = this.getOrderApiConfigImplementor(sendOrder.getOrderApiConfig());
+            Order order = sendOrder.getOrder();
             order.setOrderSentDate(LocalDateTime.now());
-            orderApiService.sendOrder(sendOrder, securityContext);
+            orderApiConfigImplementor.sendOrder(sendOrder, securityContext);
             repository.merge(order);
             return order;
         } catch (Exception ex) {
@@ -206,8 +224,8 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
             logger.log(Level.SEVERE, error, ex);
             throw new BadRequestException(error);
         } finally {
-            for (IOrderApiService plugin : plugins) {
-                pluginService.cleanUpInstance(plugin);
+            if (orderApiConfigImplementor != null) {
+                pluginService.cleanUpInstance(orderApiConfigImplementor);
             }
         }
     }

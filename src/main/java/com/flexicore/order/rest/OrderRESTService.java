@@ -1,27 +1,25 @@
 package com.flexicore.order.rest;
 
-import com.flexicore.annotations.IOperation;
 import com.flexicore.annotations.OperationsInside;
+import com.flexicore.annotations.ProtectedREST;
 import com.flexicore.annotations.plugins.PluginInfo;
 import com.flexicore.data.jsoncontainers.PaginationResponse;
-
-import com.flexicore.annotations.ProtectedREST;
 import com.flexicore.interfaces.RestServicePlugin;
 import com.flexicore.order.model.Order;
 import com.flexicore.order.request.CreateOrder;
 import com.flexicore.order.request.OrderFiltering;
-import com.flexicore.order.request.SendOrder;
 import com.flexicore.order.request.UpdateOrder;
 import com.flexicore.order.service.OrderService;
 import com.flexicore.security.SecurityContext;
-
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import javax.inject.Inject;
-import javax.interceptor.Interceptors;
-import javax.ws.rs.*;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
 @PluginInfo(version = 1)
@@ -76,11 +74,6 @@ public class OrderRESTService implements RestServicePlugin {
 			@HeaderParam("authenticationKey") String authenticationKey,
 			UpdateOrder updateContainer,
 			@Context SecurityContext securityContext) {
-		Order Order = service.getByIdOrNull(updateContainer.getId(), Order.class, null, securityContext);
-		if (Order == null) {
-			throw new BadRequestException("no Order with id " + updateContainer.getId());
-		}
-		updateContainer.setOrder(Order);
 		service.validate(updateContainer,securityContext);
 		return service.updateOrder(updateContainer, securityContext);
 	}

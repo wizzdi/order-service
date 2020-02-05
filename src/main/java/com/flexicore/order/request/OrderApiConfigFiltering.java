@@ -15,7 +15,6 @@ public class OrderApiConfigFiltering extends FilteringInformationHolder {
     private Set<Supplier> suppliers;
     @JsonIgnore
     private Set<OrderApiConfig> orderApiConfigs;
-    private Boolean hasActiveLinks;
 
     public Set<String> getSupplierIds() {
         return supplierIds;
@@ -51,10 +50,6 @@ public class OrderApiConfigFiltering extends FilteringInformationHolder {
     public <T extends OrderApiConfigFiltering> T setOrderApiConfigs(Set<OrderApiConfig> orderApiConfigs) {
         this.orderApiConfigs = orderApiConfigs;
         return (T) this;
-    }
-
-    public Boolean getHasActiveLinks() {
-        return hasActiveLinks;
     }
 }
 

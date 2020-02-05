@@ -18,5 +18,6 @@ public interface IOrderApiInvokerService extends ServicePlugin {
     PaginationResponse<OrderApiConfig> getOrderApiConfigs(OrderApiConfigFiltering filtering, SecurityContext securityContext);
     void validate(SendOrder sendOrder, SecurityContext securityContext);
     Order sendOrder(SendOrder SendOrder, SecurityContext securityContext);
+    IOrderApiService getOrderApiConfigImplementor(OrderApiConfig orderApiConfig);
 
 }
