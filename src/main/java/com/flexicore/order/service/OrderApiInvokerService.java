@@ -122,6 +122,7 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
             if (suitable.isEmpty()) {
                 throw new BadRequestException("No service is suitable to handle request:" + aClass);
             }
+
             result = suitable.get(0);
             return result;
         } finally {
