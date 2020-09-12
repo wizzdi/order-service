@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flexicore.organization.model.Organization;
 import com.flexicore.organization.model.Supplier;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public class CreateOrder {
     private String name;
@@ -16,8 +16,8 @@ public class CreateOrder {
     private String supplierId;
     @JsonIgnore
     private Supplier supplier;
-    private LocalDateTime orderDate;
-    private LocalDateTime orderSentDate;
+    private OffsetDateTime orderDate;
+    private OffsetDateTime orderSentDate;
     private Integer ordinal;
 
 
@@ -86,20 +86,20 @@ public class CreateOrder {
         return (T) this;
     }
 
-    public LocalDateTime getOrderDate() {
+    public OffsetDateTime getOrderDate() {
         return orderDate;
     }
 
-    public <T extends CreateOrder> T setOrderDate(LocalDateTime orderDate) {
+    public <T extends CreateOrder> T setOrderDate(OffsetDateTime orderDate) {
         this.orderDate = orderDate;
         return (T) this;
     }
 
-    public LocalDateTime getOrderSentDate() {
+    public OffsetDateTime getOrderSentDate() {
         return orderSentDate;
     }
 
-    public <T extends CreateOrder> T setOrderSentDate(LocalDateTime orderSentDate) {
+    public <T extends CreateOrder> T setOrderSentDate(OffsetDateTime orderSentDate) {
         this.orderSentDate = orderSentDate;
         return (T) this;
     }

@@ -19,6 +19,7 @@ import com.flexicore.service.PluginService;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -216,7 +217,7 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
         try {
             orderApiConfigImplementor = this.getOrderApiConfigImplementor(sendOrder.getOrderApiConfig());
             Order order = sendOrder.getOrder();
-            order.setOrderSentDate(LocalDateTime.now());
+            order.setOrderSentDate(OffsetDateTime.now());
             orderApiConfigImplementor.sendOrder(sendOrder, securityContext);
             repository.merge(order);
             return order;
