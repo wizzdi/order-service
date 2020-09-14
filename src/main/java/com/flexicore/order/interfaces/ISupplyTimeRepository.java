@@ -11,7 +11,9 @@ import java.util.List;
 
 public interface ISupplyTimeRepository extends PluginRepository {
 
-    static <T extends SupplyTime> void addSupplyTimePredicates(List<Predicate> preds, CriteriaBuilder cb, Root<T> r, SupplyTimeFiltering orderFiltering) {
+	static <T extends SupplyTime> void addSupplyTimePredicates(
+			List<Predicate> preds, CriteriaBuilder cb, Root<T> r,
+			SupplyTimeFiltering orderFiltering) {
 
-    }
+	}
 }

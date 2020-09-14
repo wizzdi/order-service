@@ -12,21 +12,24 @@ import com.flexicore.security.SecurityContext;
 import java.util.List;
 
 public interface IOrderService extends ServicePlugin {
-    PaginationResponse<Order> getAllOrders(OrderFiltering orderFiltering, SecurityContext securityContext);
+	PaginationResponse<Order> getAllOrders(OrderFiltering orderFiltering,
+			SecurityContext securityContext);
 
-    List<Order> listAllOrders(OrderFiltering orderFiltering, SecurityContext securityContext);
+	List<Order> listAllOrders(OrderFiltering orderFiltering,
+			SecurityContext securityContext);
 
-    void validate(OrderFiltering orderFiltering, SecurityContext securityContext);
+	void validate(OrderFiltering orderFiltering, SecurityContext securityContext);
 
-    void validate(CreateOrder createOrder, SecurityContext securityContext);
+	void validate(CreateOrder createOrder, SecurityContext securityContext);
 
-    void validate(UpdateOrder updateOrder, SecurityContext securityContext);
+	void validate(UpdateOrder updateOrder, SecurityContext securityContext);
 
-    Order createOrder(CreateOrder createOrder, SecurityContext securityContext);
+	Order createOrder(CreateOrder createOrder, SecurityContext securityContext);
 
-    Order updateOrder(UpdateOrder updateOrder, SecurityContext securityContext);
+	Order updateOrder(UpdateOrder updateOrder, SecurityContext securityContext);
 
-    Order createOrderNoMerge(CreateOrder createOrder, SecurityContext securityContext);
+	Order createOrderNoMerge(CreateOrder createOrder,
+			SecurityContext securityContext);
 
-    boolean updateOrderNoMerge(Order order, CreateOrder createOrder);
+	boolean updateOrderNoMerge(Order order, CreateOrder createOrder);
 }

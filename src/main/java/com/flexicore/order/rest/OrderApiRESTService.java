@@ -17,71 +17,74 @@ import com.flexicore.security.SecurityContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import org.pf4j.Extension;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @PluginInfo(version = 1)
 @OperationsInside
 @ProtectedREST
 @Path("plugins/OrderApi")
 @Tag(name = "OrderApi")
+@Extension
+@Component
 public class OrderApiRESTService implements RestServicePlugin {
 
-    @Inject
-    @PluginInfo(version = 1)
-    private OrderApiInvokerService service;
+	@PluginInfo(version = 1)
+	@Autowired
+	private OrderApiInvokerService service;
 
-    @POST
-    @Produces("application/json")
-    @Path("/createOrderApiConfig")
-    @Operation(summary = "createOrderApiConfig", description = "Creates configuration instance for API")
-    public OrderApiConfig createOrderApiConfig(
-            @HeaderParam("authenticationKey") String authenticationKey,
-            CreateOrderApiConfig creationContainer,
-            @Context SecurityContext securityContext) {
-        service.validate(creationContainer, securityContext);
-        return service.createOrderApiConfig(creationContainer, securityContext);
-    }
+	@POST
+	@Produces("application/json")
+	@Path("/createOrderApiConfig")
+	@Operation(summary = "createOrderApiConfig", description = "Creates configuration instance for API")
+	public OrderApiConfig createOrderApiConfig(
+			@HeaderParam("authenticationKey") String authenticationKey,
+			CreateOrderApiConfig creationContainer,
+			@Context SecurityContext securityContext) {
+		service.validate(creationContainer, securityContext);
+		return service.createOrderApiConfig(creationContainer, securityContext);
+	}
 
-    @POST
-    @Produces("application/json")
-    @Path("/updateOrderApiConfig")
-    @Operation(summary = "updateOrderApiConfig", description = "Updates configuration instance for API")
-    public OrderApiConfig updateOrderApiConfig(
-            @HeaderParam("authenticationKey") String authenticationKey,
-            UpdateOrderApiConfig updateContainer,
-            @Context SecurityContext securityContext) {
-        service.validate(updateContainer, securityContext);
-        return service.updateOrderApiConfig(updateContainer, securityContext);
-    }
+	@POST
+	@Produces("application/json")
+	@Path("/updateOrderApiConfig")
+	@Operation(summary = "updateOrderApiConfig", description = "Updates configuration instance for API")
+	public OrderApiConfig updateOrderApiConfig(
+			@HeaderParam("authenticationKey") String authenticationKey,
+			UpdateOrderApiConfig updateContainer,
+			@Context SecurityContext securityContext) {
+		service.validate(updateContainer, securityContext);
+		return service.updateOrderApiConfig(updateContainer, securityContext);
+	}
 
-    @POST
-    @Produces("application/json")
-    @Path("/listAllOrderApiConfigs")
-    @Operation(summary = "listAllOrderApiConfigs", description = "Get all configuration instances for API")
-    public PaginationResponse<OrderApiConfig> listAllOrderApiConfigs(
-            @HeaderParam("authenticationKey") String authenticationKey,
-            OrderApiConfigFiltering filtering,
-            @Context SecurityContext securityContext) {
-        service.validate(filtering, securityContext);
-        return service.getOrderApiConfigs(filtering, securityContext);
-    }
+	@POST
+	@Produces("application/json")
+	@Path("/listAllOrderApiConfigs")
+	@Operation(summary = "listAllOrderApiConfigs", description = "Get all configuration instances for API")
+	public PaginationResponse<OrderApiConfig> listAllOrderApiConfigs(
+			@HeaderParam("authenticationKey") String authenticationKey,
+			OrderApiConfigFiltering filtering,
+			@Context SecurityContext securityContext) {
+		service.validate(filtering, securityContext);
+		return service.getOrderApiConfigs(filtering, securityContext);
+	}
 
-    @POST
-    @Produces("application/json")
-    @Path("/sendOrder")
-    @Operation(summary = "sendOrder", description = "Get all configuration instances for API")
-    public Order sendOrder(
-            @HeaderParam("authenticationKey") String authenticationKey,
-            SendOrder sendOrder,
-            @Context SecurityContext securityContext) {
-        service.validate(sendOrder, securityContext);
-        return service.sendOrder(sendOrder, securityContext);
-    }
+	@POST
+	@Produces("application/json")
+	@Path("/sendOrder")
+	@Operation(summary = "sendOrder", description = "Get all configuration instances for API")
+	public Order sendOrder(
+			@HeaderParam("authenticationKey") String authenticationKey,
+			SendOrder sendOrder, @Context SecurityContext securityContext) {
+		service.validate(sendOrder, securityContext);
+		return service.sendOrder(sendOrder, securityContext);
+	}
 
 }

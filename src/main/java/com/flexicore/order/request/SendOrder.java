@@ -10,48 +10,49 @@ import java.util.List;
 
 public class SendOrder {
 
-    private String orderId;
-    private String orderApiConfigId;
-    @JsonIgnore
-    private Order order;
-    @JsonIgnore
-    private OrderApiConfig orderApiConfig;
+	private String orderId;
+	private String orderApiConfigId;
+	@JsonIgnore
+	private Order order;
+	@JsonIgnore
+	private OrderApiConfig orderApiConfig;
 
-    public String getOrderId() {
-        return orderId;
-    }
+	public String getOrderId() {
+		return orderId;
+	}
 
-    public <T extends SendOrder> T setOrderId(String orderId) {
-        this.orderId = orderId;
-        return (T) this;
-    }
+	public <T extends SendOrder> T setOrderId(String orderId) {
+		this.orderId = orderId;
+		return (T) this;
+	}
 
-    public String getOrderApiConfigId() {
-        return orderApiConfigId;
-    }
+	public String getOrderApiConfigId() {
+		return orderApiConfigId;
+	}
 
-    public <T extends SendOrder> T setOrderApiConfigId(String orderApiConfigId) {
-        this.orderApiConfigId = orderApiConfigId;
-        return (T) this;
-    }
+	public <T extends SendOrder> T setOrderApiConfigId(String orderApiConfigId) {
+		this.orderApiConfigId = orderApiConfigId;
+		return (T) this;
+	}
 
-    @JsonIgnore
-    public Order getOrder() {
-        return order;
-    }
+	@JsonIgnore
+	public Order getOrder() {
+		return order;
+	}
 
-    public <T extends SendOrder> T setOrder(Order order) {
-        this.order = order;
-        return (T) this;
-    }
+	public <T extends SendOrder> T setOrder(Order order) {
+		this.order = order;
+		return (T) this;
+	}
 
-    @JsonIgnore
-    public OrderApiConfig getOrderApiConfig() {
-        return orderApiConfig;
-    }
+	@JsonIgnore
+	public OrderApiConfig getOrderApiConfig() {
+		return orderApiConfig;
+	}
 
-    public <T extends SendOrder> T setOrderApiConfig(OrderApiConfig orderApiConfig) {
-        this.orderApiConfig = orderApiConfig;
-        return (T) this;
-    }
+	public <T extends SendOrder> T setOrderApiConfig(
+			OrderApiConfig orderApiConfig) {
+		this.orderApiConfig = orderApiConfig;
+		return (T) this;
+	}
 }

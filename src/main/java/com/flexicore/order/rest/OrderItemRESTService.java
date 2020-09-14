@@ -15,23 +15,25 @@ import com.flexicore.security.SecurityContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import org.pf4j.Extension;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @PluginInfo(version = 1)
 @OperationsInside
 @ProtectedREST
 @Path("plugins/OrderItem")
-@Tag(name="OrderItem")
+@Tag(name = "OrderItem")
+@Extension
+@Component
 public class OrderItemRESTService implements RestServicePlugin {
 
-	@Inject
 	@PluginInfo(version = 1)
+	@Autowired
 	private OrderItemService service;
-
-
 
 	@POST
 	@Produces("application/json")
@@ -45,8 +47,6 @@ public class OrderItemRESTService implements RestServicePlugin {
 		return service.createOrderItem(creationContainer, securityContext);
 	}
 
-
-
 	@POST
 	@Produces("application/json")
 	@Operation(summary = "getAllOrderItems", description = "Lists all OrderItems Filtered")
@@ -55,7 +55,7 @@ public class OrderItemRESTService implements RestServicePlugin {
 			@HeaderParam("authenticationKey") String authenticationKey,
 			OrderItemFiltering filtering,
 			@Context SecurityContext securityContext) {
-		service.validate(filtering,securityContext);
+		service.validate(filtering, securityContext);
 		return service.getAllOrderItems(filtering, securityContext);
 	}
 
@@ -67,15 +67,15 @@ public class OrderItemRESTService implements RestServicePlugin {
 			@HeaderParam("authenticationKey") String authenticationKey,
 			UpdateOrderItem updateContainer,
 			@Context SecurityContext securityContext) {
-		OrderItem OrderItem = service.getByIdOrNull(updateContainer.getId(), OrderItem.class, null, securityContext);
+		OrderItem OrderItem = service.getByIdOrNull(updateContainer.getId(),
+				OrderItem.class, null, securityContext);
 		if (OrderItem == null) {
-			throw new BadRequestException("no OrderItem with id " + updateContainer.getId());
+			throw new BadRequestException("no OrderItem with id "
+					+ updateContainer.getId());
 		}
 		updateContainer.setOrderItem(OrderItem);
-		service.validate(updateContainer,securityContext);
+		service.validate(updateContainer, securityContext);
 		return service.updateOrderItem(updateContainer, securityContext);
 	}
-
-
 
 }

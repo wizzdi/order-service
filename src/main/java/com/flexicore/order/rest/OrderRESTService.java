@@ -15,30 +15,31 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import javax.inject.Inject;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import org.pf4j.Extension;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @PluginInfo(version = 1)
 @OperationsInside
 @ProtectedREST
 @Path("plugins/Order")
-@OpenAPIDefinition(tags = {
-		@Tag(name = "Order",description = "Order Api"),
-		@Tag(name = "OrderItem",description = "OrderItem Api")
+@OpenAPIDefinition(tags = {@Tag(name = "Order", description = "Order Api"),
+		@Tag(name = "OrderItem", description = "OrderItem Api")
 
 })
-@Tag(name="Order")
+@Tag(name = "Order")
+@Extension
+@Component
 public class OrderRESTService implements RestServicePlugin {
 
-	@Inject
 	@PluginInfo(version = 1)
+	@Autowired
 	private OrderService service;
-
-
 
 	@POST
 	@Produces("application/json")
@@ -52,17 +53,14 @@ public class OrderRESTService implements RestServicePlugin {
 		return service.createOrder(creationContainer, securityContext);
 	}
 
-
-
 	@POST
 	@Produces("application/json")
 	@Operation(summary = "getAllOrders", description = "Lists all Orders Filtered")
 	@Path("getAllOrders")
 	public PaginationResponse<Order> getAllOrders(
 			@HeaderParam("authenticationKey") String authenticationKey,
-			OrderFiltering filtering,
-			@Context SecurityContext securityContext) {
-		service.validate(filtering,securityContext);
+			OrderFiltering filtering, @Context SecurityContext securityContext) {
+		service.validate(filtering, securityContext);
 		return service.getAllOrders(filtering, securityContext);
 	}
 
@@ -74,23 +72,21 @@ public class OrderRESTService implements RestServicePlugin {
 			@HeaderParam("authenticationKey") String authenticationKey,
 			UpdateOrder updateContainer,
 			@Context SecurityContext securityContext) {
-		service.validate(updateContainer,securityContext);
+		service.validate(updateContainer, securityContext);
 		return service.updateOrder(updateContainer, securityContext);
 	}
 
-//	@POST
-//	@Produces("application/json")
-//	@Path("/sendOrder")
-//	@Operation(summary = "sendOrder", description = "Send Order to provider using API")
-//	public Order sendOrder(
-//			@HeaderParam("authenticationKey") String authenticationKey,
-//			SendOrder sendOrder,
-//			@Context SecurityContext securityContext) {
-//		service.validate(sendOrder, securityContext);
-//		return service.sendOrder(sendOrder, securityContext);
-//	}
-
-
-
+	// @POST
+	// @Produces("application/json")
+	// @Path("/sendOrder")
+	// @Operation(summary = "sendOrder", description =
+	// "Send Order to provider using API")
+	// public Order sendOrder(
+	// @HeaderParam("authenticationKey") String authenticationKey,
+	// SendOrder sendOrder,
+	// @Context SecurityContext securityContext) {
+	// service.validate(sendOrder, securityContext);
+	// return service.sendOrder(sendOrder, securityContext);
+	// }
 
 }

@@ -11,19 +11,28 @@ import com.flexicore.security.SecurityContext;
 import java.util.List;
 
 public interface IOrderItemService extends ServicePlugin {
-    PaginationResponse<OrderItem> getAllOrderItems(OrderItemFiltering orderItemFiltering, SecurityContext securityContext);
+	PaginationResponse<OrderItem> getAllOrderItems(
+			OrderItemFiltering orderItemFiltering,
+			SecurityContext securityContext);
 
-    List<OrderItem> listAllOrderItems(OrderItemFiltering orderItemFiltering, SecurityContext securityContext);
+	List<OrderItem> listAllOrderItems(OrderItemFiltering orderItemFiltering,
+			SecurityContext securityContext);
 
-    void validate(OrderItemFiltering orderItemFiltering, SecurityContext securityContext);
+	void validate(OrderItemFiltering orderItemFiltering,
+			SecurityContext securityContext);
 
-    void validate(CreateOrderItem createOrderItem, SecurityContext securityContext);
+	void validate(CreateOrderItem createOrderItem,
+			SecurityContext securityContext);
 
-    OrderItem createOrderItem(CreateOrderItem createOrderItem, SecurityContext securityContext);
+	OrderItem createOrderItem(CreateOrderItem createOrderItem,
+			SecurityContext securityContext);
 
-    OrderItem updateOrderItem(UpdateOrderItem updateOrderItem, SecurityContext securityContext);
+	OrderItem updateOrderItem(UpdateOrderItem updateOrderItem,
+			SecurityContext securityContext);
 
-    OrderItem createOrderItemNoMerge(CreateOrderItem createOrderItem, SecurityContext securityContext);
+	OrderItem createOrderItemNoMerge(CreateOrderItem createOrderItem,
+			SecurityContext securityContext);
 
-    boolean updateOrderItemNoMerge(OrderItem orderItem, CreateOrderItem createOrderItem);
+	boolean updateOrderItemNoMerge(OrderItem orderItem,
+			CreateOrderItem createOrderItem);
 }

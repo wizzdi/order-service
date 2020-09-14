@@ -15,34 +15,46 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.pf4j.Extension;
+import org.springframework.stereotype.Component;
 
 @PluginInfo(version = 1)
+@Extension
+@Component
 public class OrderApiRepository extends AbstractRepositoryPlugin {
-    public List<OrderApiConfig> listAllOrderApiConfig(SecurityContext securityContext, OrderApiConfigFiltering filtering) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<OrderApiConfig> q = cb.createQuery(OrderApiConfig.class);
-        Root<OrderApiConfig> r = q.from(OrderApiConfig.class);
-        List<Predicate> preds = new ArrayList<>();
-        addPredicate(filtering, cb, r, preds);
-        QueryInformationHolder<OrderApiConfig> queryInformationHolder = new QueryInformationHolder<>(filtering, OrderApiConfig.class, securityContext);
-        return getAllFiltered(queryInformationHolder, preds, cb, q, r);
-    }
+	public List<OrderApiConfig> listAllOrderApiConfig(
+			SecurityContext securityContext, OrderApiConfigFiltering filtering) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<OrderApiConfig> q = cb.createQuery(OrderApiConfig.class);
+		Root<OrderApiConfig> r = q.from(OrderApiConfig.class);
+		List<Predicate> preds = new ArrayList<>();
+		addPredicate(filtering, cb, r, preds);
+		QueryInformationHolder<OrderApiConfig> queryInformationHolder = new QueryInformationHolder<>(
+				filtering, OrderApiConfig.class, securityContext);
+		return getAllFiltered(queryInformationHolder, preds, cb, q, r);
+	}
 
-    public Long countAllOrderApiConfig(SecurityContext securityContext, OrderApiConfigFiltering filtering) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> q = cb.createQuery(Long.class);
-        Root<OrderApiConfig> r = q.from(OrderApiConfig.class);
-        List<Predicate> preds = new ArrayList<>();
-        addPredicate(filtering, cb, r, preds);
-        QueryInformationHolder<OrderApiConfig> queryInformationHolder = new QueryInformationHolder<>(filtering, OrderApiConfig.class, securityContext);
-        return countAllFiltered(queryInformationHolder, preds, cb, q, r);
-    }
+	public Long countAllOrderApiConfig(SecurityContext securityContext,
+			OrderApiConfigFiltering filtering) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Long> q = cb.createQuery(Long.class);
+		Root<OrderApiConfig> r = q.from(OrderApiConfig.class);
+		List<Predicate> preds = new ArrayList<>();
+		addPredicate(filtering, cb, r, preds);
+		QueryInformationHolder<OrderApiConfig> queryInformationHolder = new QueryInformationHolder<>(
+				filtering, OrderApiConfig.class, securityContext);
+		return countAllFiltered(queryInformationHolder, preds, cb, q, r);
+	}
 
-    private void addPredicate(OrderApiConfigFiltering filtering, CriteriaBuilder cb, Root<OrderApiConfig> r, List<Predicate> preds) {
-        if (filtering.getSuppliers() != null && !filtering.getSuppliers().isEmpty()) {
-            Set<String> ids = filtering.getSuppliers().parallelStream().map(f -> f.getId()).collect(Collectors.toSet());
-            Join<OrderApiConfig, Supplier> join = r.join(OrderApiConfig_.supplier);
-            preds.add(join.get(Supplier_.id).in(ids));
-        }
-    }
+	private void addPredicate(OrderApiConfigFiltering filtering,
+			CriteriaBuilder cb, Root<OrderApiConfig> r, List<Predicate> preds) {
+		if (filtering.getSuppliers() != null
+				&& !filtering.getSuppliers().isEmpty()) {
+			Set<String> ids = filtering.getSuppliers().parallelStream()
+					.map(f -> f.getId()).collect(Collectors.toSet());
+			Join<OrderApiConfig, Supplier> join = r
+					.join(OrderApiConfig_.supplier);
+			preds.add(join.get(Supplier_.id).in(ids));
+		}
+	}
 }

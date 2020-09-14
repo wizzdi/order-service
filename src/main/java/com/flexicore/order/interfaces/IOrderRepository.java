@@ -19,19 +19,27 @@ import java.util.stream.Collectors;
 
 public interface IOrderRepository extends PluginRepository {
 
-    static <T extends Order> void addOrderPredicates(List<Predicate> preds, CriteriaBuilder cb, Root<T> r, OrderFiltering orderFiltering) {
-        if (orderFiltering.getExternalIds() != null && !orderFiltering.getExternalIds().isEmpty()) {
-            preds.add(r.get(Order_.externalId).in(orderFiltering.getExternalIds()));
-        }
-        if (orderFiltering.getConsumingOrganizations() != null && !orderFiltering.getConsumingOrganizations().isEmpty()) {
-            Set<String> ids = orderFiltering.getConsumingOrganizations().parallelStream().map(f -> f.getId()).collect(Collectors.toSet());
-            Join<T, Organization> join = r.join(Order_.consumingOrganization);
-            preds.add(join.get(Organization_.id).in(ids));
-        }
-        if (orderFiltering.getSuppliers() != null && !orderFiltering.getSuppliers().isEmpty()) {
-            Set<String> ids = orderFiltering.getSuppliers().parallelStream().map(f -> f.getId()).collect(Collectors.toSet());
-            Join<T, Supplier> join = r.join(Order_.supplier);
-            preds.add(join.get(Supplier_.id).in(ids));
-        }
-    }
+	static <T extends Order> void addOrderPredicates(List<Predicate> preds,
+			CriteriaBuilder cb, Root<T> r, OrderFiltering orderFiltering) {
+		if (orderFiltering.getExternalIds() != null
+				&& !orderFiltering.getExternalIds().isEmpty()) {
+			preds.add(r.get(Order_.externalId).in(
+					orderFiltering.getExternalIds()));
+		}
+		if (orderFiltering.getConsumingOrganizations() != null
+				&& !orderFiltering.getConsumingOrganizations().isEmpty()) {
+			Set<String> ids = orderFiltering.getConsumingOrganizations()
+					.parallelStream().map(f -> f.getId())
+					.collect(Collectors.toSet());
+			Join<T, Organization> join = r.join(Order_.consumingOrganization);
+			preds.add(join.get(Organization_.id).in(ids));
+		}
+		if (orderFiltering.getSuppliers() != null
+				&& !orderFiltering.getSuppliers().isEmpty()) {
+			Set<String> ids = orderFiltering.getSuppliers().parallelStream()
+					.map(f -> f.getId()).collect(Collectors.toSet());
+			Join<T, Supplier> join = r.join(Order_.supplier);
+			preds.add(join.get(Supplier_.id).in(ids));
+		}
+	}
 }

@@ -16,28 +16,30 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import org.pf4j.Extension;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @PluginInfo(version = 1)
 @OperationsInside
 @ProtectedREST
 @Path("plugins/SupplyTime")
 @OpenAPIDefinition(tags = {
-		@Tag(name = "SupplyTime",description = "SupplyTime Api"),
-		@Tag(name = "SupplyTimeItem",description = "SupplyTimeItem Api")
+		@Tag(name = "SupplyTime", description = "SupplyTime Api"),
+		@Tag(name = "SupplyTimeItem", description = "SupplyTimeItem Api")
 
 })
-@Tag(name="SupplyTime")
+@Tag(name = "SupplyTime")
+@Extension
+@Component
 public class SupplyTimeRESTService implements RestServicePlugin {
 
-	@Inject
 	@PluginInfo(version = 1)
+	@Autowired
 	private SupplyTimeService service;
-
-
 
 	@POST
 	@Produces("application/json")
@@ -51,8 +53,6 @@ public class SupplyTimeRESTService implements RestServicePlugin {
 		return service.createSupplyTime(creationContainer, securityContext);
 	}
 
-
-
 	@POST
 	@Produces("application/json")
 	@Operation(summary = "getAllSupplyTimes", description = "Lists all SupplyTimes Filtered")
@@ -61,7 +61,7 @@ public class SupplyTimeRESTService implements RestServicePlugin {
 			@HeaderParam("authenticationKey") String authenticationKey,
 			SupplyTimeFiltering filtering,
 			@Context SecurityContext securityContext) {
-		service.validate(filtering,securityContext);
+		service.validate(filtering, securityContext);
 		return service.getAllSupplyTimes(filtering, securityContext);
 	}
 
@@ -73,15 +73,15 @@ public class SupplyTimeRESTService implements RestServicePlugin {
 			@HeaderParam("authenticationKey") String authenticationKey,
 			UpdateSupplyTime updateContainer,
 			@Context SecurityContext securityContext) {
-		SupplyTime SupplyTime = service.getByIdOrNull(updateContainer.getId(), SupplyTime.class, null, securityContext);
+		SupplyTime SupplyTime = service.getByIdOrNull(updateContainer.getId(),
+				SupplyTime.class, null, securityContext);
 		if (SupplyTime == null) {
-			throw new BadRequestException("no SupplyTime with id " + updateContainer.getId());
+			throw new BadRequestException("no SupplyTime with id "
+					+ updateContainer.getId());
 		}
 		updateContainer.setSupplyTime(SupplyTime);
-		service.validate(updateContainer,securityContext);
+		service.validate(updateContainer, securityContext);
 		return service.updateSupplyTime(updateContainer, securityContext);
 	}
-
-
 
 }

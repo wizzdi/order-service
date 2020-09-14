@@ -12,20 +12,29 @@ import java.util.List;
 
 public interface ISupplyTimeService extends ServicePlugin {
 
+	PaginationResponse<SupplyTime> getAllSupplyTimes(
+			SupplyTimeFiltering supplyTimeFiltering,
+			SecurityContext securityContext);
 
-    PaginationResponse<SupplyTime> getAllSupplyTimes(SupplyTimeFiltering supplyTimeFiltering, SecurityContext securityContext);
+	List<SupplyTime> listAllSupplyTimes(
+			SupplyTimeFiltering supplyTimeFiltering,
+			SecurityContext securityContext);
 
-    List<SupplyTime> listAllSupplyTimes(SupplyTimeFiltering supplyTimeFiltering, SecurityContext securityContext);
+	void validate(SupplyTimeFiltering supplyTimeFiltering,
+			SecurityContext securityContext);
 
-    void validate(SupplyTimeFiltering supplyTimeFiltering, SecurityContext securityContext);
+	void validate(CreateSupplyTime createSupplyTime,
+			SecurityContext securityContext);
 
-    void validate(CreateSupplyTime createSupplyTime, SecurityContext securityContext);
+	SupplyTime createSupplyTime(CreateSupplyTime createSupplyTime,
+			SecurityContext securityContext);
 
-    SupplyTime createSupplyTime(CreateSupplyTime createSupplyTime, SecurityContext securityContext);
+	SupplyTime updateSupplyTime(UpdateSupplyTime updateSupplyTime,
+			SecurityContext securityContext);
 
-    SupplyTime updateSupplyTime(UpdateSupplyTime updateSupplyTime, SecurityContext securityContext);
+	SupplyTime createSupplyTimeNoMerge(CreateSupplyTime createSupplyTime,
+			SecurityContext securityContext);
 
-    SupplyTime createSupplyTimeNoMerge(CreateSupplyTime createSupplyTime, SecurityContext securityContext);
-
-    boolean updateSupplyTimeNoMerge(SupplyTime supplyTime, CreateSupplyTime createSupplyTime);
+	boolean updateSupplyTimeNoMerge(SupplyTime supplyTime,
+			CreateSupplyTime createSupplyTime);
 }
