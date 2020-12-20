@@ -227,7 +227,7 @@ public class OrderApiInvokerService implements IOrderApiInvokerService {
             repository.merge(order);
             return order;
         } catch (Exception ex) {
-            String error = "Failed to send order to provider, orderId: " + sendOrder.getOrderId();
+			String error = String.format("Failed to send order to provider, orderId: %s, error: %s", sendOrder.getOrderId(), ex.getMessage());
             logger.error(error, ex);
             throw new BadRequestException(error);
         }
